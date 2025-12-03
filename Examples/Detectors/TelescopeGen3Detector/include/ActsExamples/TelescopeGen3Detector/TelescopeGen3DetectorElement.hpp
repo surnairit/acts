@@ -24,12 +24,12 @@ class ISurfaceMaterial;
 
 namespace ActsExamples {
 
-/// @class TelescopeGen3Element
+/// @class TelescopeGen3DetectorElement
 ///
 /// This is a lightweight type of detector element,
 /// it simply implements the base class.
 ///
-class TelescopeGen3Element : public Acts::DetectorElementBase {
+class TelescopeGen3DetectorElement : public Acts::DetectorElementBase {
  public:
   using identifier_type = unsigned long long;
   using identifier_diff = long long;
@@ -46,7 +46,7 @@ class TelescopeGen3Element : public Acts::DetectorElementBase {
   /// @param pBounds is the planar bounds for the planar detector element
   /// @param thickness is the module thickness
   /// @param material is the (optional) Surface material associated to it
-  TelescopeGen3Element(
+  TelescopeGen3DetectorElement(
       const Identifier identifier, const Acts::Transform3& transform,
       std::shared_ptr<const Acts::PlanarBounds> pBounds, double thickness,
       std::shared_ptr<const Acts::ISurfaceMaterial> material = nullptr);
@@ -59,7 +59,7 @@ class TelescopeGen3Element : public Acts::DetectorElementBase {
   /// @param dBounds is the planar bounds for the disc like detector element
   /// @param thickness is the module thickness
   /// @param material is the (optional) Surface material associated to it
-  TelescopeGen3Element(
+  TelescopeGen3DetectorElement(
       const Identifier identifier, const Acts::Transform3& transform,
       std::shared_ptr<const Acts::DiscBounds> dBounds, double thickness,
       std::shared_ptr<const Acts::ISurfaceMaterial> material = nullptr);
