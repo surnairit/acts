@@ -18,6 +18,7 @@
 #include "ActsExamples/GenericDetector/AlignedGenericDetector.hpp"
 #include "ActsExamples/GenericDetector/GenericDetector.hpp"
 #include "ActsExamples/TelescopeDetector/TelescopeDetector.hpp"
+#include "ActsExamples/TelescopeGen3Detector/TelescopeGen3Detector.hpp"
 #include "ActsExamples/Utilities/Options.hpp"
 #include "ActsPython/Utilities/Helpers.hpp"
 #include "ActsPython/Utilities/Macros.hpp"

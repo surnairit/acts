@@ -54,6 +54,7 @@ target_link_libraries(
         Acts::ExamplesVertexing
         Acts::ExamplesFatras
         Acts::ExamplesDetectorTelescope
+        Acts::ExamplesDetectorTelescopeGen3
         Acts::ExamplesUtilities
         Acts::ExamplesAmbiguityResolution
         Acts::ExamplesTruthTracking
