@@ -17,6 +17,7 @@
 #include "ActsExamples/GenericDetector/AlignedGenericDetector.hpp"
 #include "ActsExamples/GenericDetector/GenericDetector.hpp"
 #include "ActsExamples/TelescopeDetector/TelescopeDetector.hpp"
+#include "ActsExamples/TelescopeDetectorGen3/TelescopeDetectorGen3.hpp"
 #include "ActsExamples/Utilities/Options.hpp"
 #include "ActsPython/Utilities/Helpers.hpp"
 #include "ActsPython/Utilities/Macros.hpp"
@@ -90,6 +91,17 @@ void addDetector(py::module& mex) {
         py::class_<TelescopeDetector::Config>(d, "Config").def(py::init<>());
     ACTS_PYTHON_STRUCT(c, positions, stereos, offsets, bounds, thickness,
                        surfaceType, binValue, materialDecorator, logLevel);
+  }
+
+  {
+    auto d = py::class_<TelescopeDetectorGen3, Detector,
+                        std::shared_ptr<TelescopeDetectorGen3>>(
+        mex, "TelescopeDetectorGen3")
+                 .def(py::init<const TelescopeDetectorGen3::Config&>());
+    auto c = py::class_<TelescopeDetectorGen3::Config>(d, "Config")
+                 .def(py::init<>());
+    ACTS_PYTHON_STRUCT(c, positions, bounds, thickness, layerEnvelope,
+                       graphvizFile, logLevel);
   }
 }
 

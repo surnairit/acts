@@ -162,6 +162,7 @@ target_link_libraries(
         Acts::ExamplesDetectorsCommon
         Acts::ExamplesDetectorGeneric
         Acts::ExamplesDetectorTelescope
+        Acts::ExamplesDetectorTelescopeGen3
         Acts::ExamplesDigitization
         Acts::ExamplesGenerators
         Acts::ExamplesMaterialMapping
