@@ -12,23 +12,26 @@
 #include "Acts/Geometry/GeometryContext.hpp"
 #include "Acts/Surfaces/Surface.hpp"
 #include "Acts/Surfaces/SurfacePlacementBase.hpp"
+#include "ActsExamples/TelescopeDetectorGen3/TelescopeDetectorGen3.hpp"
 
+#include <array>
 #include <memory>
 
 namespace Acts {
-class RadialBounds;
+class SurfaceBounds;
 }
 
 namespace ActsExamples {
 
-/// One disc-shaped sensitive element used by TelescopeDetectorGen3.
+/// One disc or rectangular-plane sensitive element.
 class TelescopeDetectorGen3Element final : public Acts::SurfacePlacementBase {
  public:
   using Identifier = unsigned long long;
 
   TelescopeDetectorGen3Element(
       Identifier identifier, std::shared_ptr<Acts::Transform3> transform,
-      std::shared_ptr<Acts::RadialBounds> bounds, double thickness);
+      TelescopeDetectorGen3::SurfaceType surfaceType,
+      const std::array<double, 2>& bounds, double thickness);
 
   ~TelescopeDetectorGen3Element() override = default;
 
@@ -47,7 +50,7 @@ class TelescopeDetectorGen3Element final : public Acts::SurfacePlacementBase {
   Identifier m_identifier;
   std::shared_ptr<Acts::Transform3> m_transform;
   std::shared_ptr<Acts::Surface> m_surface;
-  std::shared_ptr<Acts::RadialBounds> m_bounds;
+  std::shared_ptr<const Acts::SurfaceBounds> m_bounds;
   double m_thickness;
 };
 

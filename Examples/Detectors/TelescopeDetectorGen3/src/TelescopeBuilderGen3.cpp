@@ -12,11 +12,12 @@
 #include "Acts/Geometry/GeometryContext.hpp"
 #include "Acts/Geometry/ProtoLayer.hpp"
 #include "Acts/Geometry/TrackingGeometry.hpp"
-#include "Acts/Surfaces/RadialBounds.hpp"
+//#include "Acts/Surfaces/RadialBounds.hpp"
 #include "Acts/Surfaces/Surface.hpp"
 #include "ActsExamples/TelescopeDetectorGen3/TelescopeBlueprintGen3.hpp"
 #include "ActsExamples/TelescopeDetectorGen3/TelescopeDetectorGen3Element.hpp"
 
+#include <array>
 #include <memory>
 #include <vector>
 
@@ -27,8 +28,10 @@ std::unique_ptr<const Acts::TrackingGeometry> buildTelescopeDetectorGen3(
     std::vector<std::shared_ptr<const Acts::SurfacePlacementBase>>&
         detectorStore,
     const TelescopeDetectorGen3::Config& config, const Acts::Logger& logger) {
-  const auto bounds =
-      std::make_shared<Acts::RadialBounds>(config.bounds[0], config.bounds[1]);
+  const std::array<double, 2>& selectedBounds =
+      config.surfaceType == TelescopeDetectorGen3::SurfaceType::Disc
+          ? config.discBounds
+          : config.planeBounds;
 
   std::vector<Acts::MutableProtoLayer> protoLayers;
   protoLayers.reserve(config.positions.size());
@@ -42,7 +45,8 @@ std::unique_ptr<const Acts::TrackingGeometry> buildTelescopeDetectorGen3(
         static_cast<TelescopeDetectorGen3Element::Identifier>(
             detectorStore.size());
     auto element = std::make_shared<TelescopeDetectorGen3Element>(
-        identifier, std::move(transform), bounds, config.thickness);
+        identifier, std::move(transform), config.surfaceType, selectedBounds,
+        config.thickness);
 
     std::vector<Acts::Surface*> surfaces{&element->surface()};
     protoLayers.emplace_back(gctx, surfaces);
