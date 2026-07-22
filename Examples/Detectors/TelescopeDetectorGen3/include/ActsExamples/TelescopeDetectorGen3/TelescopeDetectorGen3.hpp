@@ -21,16 +21,25 @@ namespace ActsExamples {
 
 /// Minimal Gen3 telescope detector for Blueprint/Python tests.
 ///
-/// The detector consists of disc-shaped sensitive surfaces stacked along the
-/// global z-axis. Plane layers to be added.
+/// The detector can construct either disc sensors in cylindrical layer volumes
+/// or rectangular plane sensors in cuboid layer volumes. In both modes the
+/// sensors are stacked along the global z-axis.
 class TelescopeDetectorGen3 final : public Detector {
  public:
+  enum class SurfaceType { Disc, Plane };
+  
   struct Config {
-    /// Global z positions of the telescope discs.
+    /// Sensor and layer-volume shape.
+    SurfaceType surfaceType{SurfaceType::Disc};
+
+    /// Global z positions of the telescope sensors.
     std::vector<double> positions{0., 30., 60.};
 
     /// Disc bounds: {minimum radius, maximum radius}.
-    std::array<double, 2> bounds{5., 25.};
+    std::array<double, 2> discBounds{5., 25.};
+
+    /// Rectangle bounds: {half-length x, half-length y}.
+    std::array<double, 2> planeBounds{25., 15.};
 
     /// Sensitive-surface thickness.
     double thickness{80. * Acts::UnitConstants::um};

@@ -32,10 +32,27 @@ TelescopeDetectorGen3::TelescopeDetectorGen3(const Config& cfg)
     throw std::invalid_argument(
         "TelescopeDetectorGen3 positions must be strictly increasing");
   }
-  if (m_cfg.bounds[0] < 0. || m_cfg.bounds[0] >= m_cfg.bounds[1]) {
-    throw std::invalid_argument(
-        "TelescopeDetectorGen3 bounds must satisfy 0 <= minR < maxR");
+  
+  switch (m_cfg.surfaceType) {
+    case SurfaceType::Disc:
+      if (m_cfg.discBounds[0] < 0. ||
+          m_cfg.discBounds[0] >= m_cfg.discBounds[1]) {
+        throw std::invalid_argument(
+            "TelescopeDetectorGen3 discBounds must satisfy "
+            "0 <= minR < maxR");
+      }
+      break;
+    case SurfaceType::Plane:
+      if (m_cfg.planeBounds[0] <= 0. || m_cfg.planeBounds[1] <= 0.) {
+        throw std::invalid_argument(
+            "TelescopeDetectorGen3 planeBounds half-lengths must be positive");
+      }
+      break;
+    default:
+      throw std::invalid_argument(
+          "TelescopeDetectorGen3 received an unknown surface type");
   }
+
   if (m_cfg.thickness <= 0.) {
     throw std::invalid_argument(
         "TelescopeDetectorGen3 thickness must be positive");

@@ -98,10 +98,15 @@ void addDetector(py::module& mex) {
                         std::shared_ptr<TelescopeDetectorGen3>>(
         mex, "TelescopeDetectorGen3")
                  .def(py::init<const TelescopeDetectorGen3::Config&>());
+
+    py::enum_<TelescopeDetectorGen3::SurfaceType>(d, "SurfaceType")
+      .value("Disc", TelescopeDetectorGen3::SurfaceType::Disc)
+      .value("Plane", TelescopeDetectorGen3::SurfaceType::Plane);
+
     auto c = py::class_<TelescopeDetectorGen3::Config>(d, "Config")
                  .def(py::init<>());
-    ACTS_PYTHON_STRUCT(c, positions, bounds, thickness, layerEnvelope,
-                       graphvizFile, logLevel);
+    ACTS_PYTHON_STRUCT(c, surfaceType, positions, discBounds, planeBounds,
+                      thickness, layerEnvelope, graphvizFile, logLevel);
   }
 }
 
