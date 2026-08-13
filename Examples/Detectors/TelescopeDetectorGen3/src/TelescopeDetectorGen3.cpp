@@ -25,12 +25,25 @@ TelescopeDetectorGen3::TelescopeDetectorGen3(const Config& cfg)
     throw std::invalid_argument(
         "TelescopeDetectorGen3 requires at least one position");
   }
+
+  if (m_cfg.stereos.empty()) {
+    m_cfg.stereos.assign(m_cfg.positions.size(), 0.);
+  } else if (m_cfg.positions.size() != m_cfg.stereos.size()) {
+    throw std::invalid_argument(
+        "The number of provided positions must match the number of "
+        "provided stereo angles.");
+  }
+
   const auto nonIncreasing = std::adjacent_find(
       m_cfg.positions.begin(), m_cfg.positions.end(),
       [](double lhs, double rhs) { return lhs >= rhs; });
   if (nonIncreasing != m_cfg.positions.end()) {
     throw std::invalid_argument(
         "TelescopeDetectorGen3 positions must be strictly increasing");
+  }
+
+  if (m_cfg.axis < 0 || m_cfg.axis > 2) {
+    throw std::invalid_argument("The axis value must be 0, 1, or 2.");
   }
   
   switch (m_cfg.surfaceType) {

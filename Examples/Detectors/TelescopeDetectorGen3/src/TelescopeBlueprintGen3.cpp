@@ -8,6 +8,7 @@
 
 #include "ActsExamples/TelescopeDetectorGen3/TelescopeBlueprintGen3.hpp"
 
+#include "Acts/Definitions/Algebra.hpp"
 #include "Acts/Geometry/Blueprint.hpp"
 #include "Acts/Geometry/BlueprintNode.hpp"
 #include "Acts/Geometry/BlueprintOptions.hpp"
@@ -25,6 +26,7 @@
 #include "Acts/Utilities/Logger.hpp"
 
 #include <fstream>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -68,6 +70,10 @@ std::unique_ptr<const Acts::TrackingGeometry> buildTelescopeBlueprintGen3(
   const bool isDisc =
       config.surfaceType == TelescopeDetectorGen3::SurfaceType::Disc;
 
+  // All child volumes are expressed in the telescope-local frame. Its local Z
+  // direction is mapped onto the selected global axis by the layer transforms
+  // stored in the proto-layers. Consequently the envelopes remain local Z/R or
+  // local X/Y/Z envelopes, independent of config.axis.
   Blueprint::Config blueprintConfig;
   if (isDisc) {
     blueprintConfig.envelope = Acts::ExtentEnvelope{{
@@ -91,8 +97,22 @@ std::unique_ptr<const Acts::TrackingGeometry> buildTelescopeBlueprintGen3(
     for (std::size_t index = 0; index < protoLayers.size(); ++index) {
       const std::string layerName =
           "TelescopeGen3_L" + std::to_string(index);
+      const auto& protoLayer = protoLayers.at(index);
+
+      // TelescopeBuilderGen3 stores the global-to-local rotation in the
+      // proto-layer metadata. Its Cartesian extent midpoints contain the
+      // desired global layer centre.
+      const Acts::Transform3 layerRotation = protoLayer.transform.inverse();
+
       telescope.addLayer(layerName, [&](auto& layer) {
-        layer.setProtoLayer(protoLayers.at(index));
+        layer.setProtoLayer(protoLayer);
+        layer.setTransform(layerRotation);
+
+        // Keep centre-of-gravity placement enabled. LayerBlueprintNode uses
+        // these extent midpoints as the global translation of the wrapping
+        // volume. Disabling this would reset every volume translation to zero
+        // and make all layers overlap in the container's local AxisZ.
+        layer.setUseCenterOfGravity(true, true, true);
 
         if (isDisc) {
           layer.setLayerType(LayerBlueprintNode::LayerType::Disc);
@@ -114,6 +134,11 @@ std::unique_ptr<const Acts::TrackingGeometry> buildTelescopeBlueprintGen3(
     }
   };
 
+  // The selected global axis is encoded in the common layer transform, not in
+  // the stack direction. In the common telescope coordinate system all layers
+  // are stacked along local Z. This is required for CylinderVolumeStack, which
+  // supports Z/R stacks rather than global X/Y cylinder stacks, and it also
+  // gives CuboidVolumeStack one common rotated coordinate system.
   if (isDisc) {
     auto& telescope = root.addCylinderContainer("TelescopeGen3", AxisZ);
     addLayers(telescope);
