@@ -7,6 +7,7 @@ Usage examples:
     python telescopeGen3_test.py --visualize output/telescope-gen3.obj
     python telescopeGen3_test.py --visualize --show-portals --show-volumes
     python telescopeGen3_test.py --graphviz telescope_plane-gen3.dot --visualize output/telescope_plane-gen3.obj --surface-type plane
+    python telescopeGen3_test.py --graphviz telescope_plane-gen3_x-stereo.dot --visualize output/telescope_plane-gen3_x-stereo.obj --surface-type plane
 
 """
 
@@ -150,6 +151,17 @@ def main() -> None:
         150.0 * units.mm,
         180.0 * units.mm,
     ]
+    config.stereos = [
+        0.0 * units.degree,
+        10.0 * units.degree,
+        0.0 * units.degree,
+        20.0 * units.degree,
+        0.0 * units.degree,
+        30.0 * units.degree,
+        0.0 * units.degree,
+    ]
+    config.axis = 0  # 0-X, 1-Y, 2-Z
+
     config.discBounds = [5.0 * units.mm, 25.0 * units.mm]
     config.planeBounds = [25.0 * units.mm, 25.0 * units.mm]
     #config.bounds = [5.0 * units.mm, 25.0 * units.mm]

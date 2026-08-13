@@ -105,8 +105,9 @@ void addDetector(py::module& mex) {
 
     auto c = py::class_<TelescopeDetectorGen3::Config>(d, "Config")
                  .def(py::init<>());
-    ACTS_PYTHON_STRUCT(c, surfaceType, positions, discBounds, planeBounds,
-                      thickness, layerEnvelope, graphvizFile, logLevel);
+    ACTS_PYTHON_STRUCT(c, surfaceType, positions, stereos, axis, discBounds, 
+                       planeBounds, thickness, layerEnvelope, graphvizFile, 
+                       logLevel);
   }
 }
 
