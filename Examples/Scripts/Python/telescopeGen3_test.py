@@ -160,7 +160,7 @@ def main() -> None:
         30.0 * units.degree,
         0.0 * units.degree,
     ]
-    config.axis = 0  # 0-X, 1-Y, 2-Z
+    config.axis = 0  # 0-X, 1-Y, 2-Z (default is Z, no need to set, but can be changed for testing)
 
     config.discBounds = [5.0 * units.mm, 25.0 * units.mm]
     config.planeBounds = [25.0 * units.mm, 25.0 * units.mm]

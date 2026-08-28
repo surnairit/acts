@@ -12,6 +12,7 @@
 #include "Acts/Geometry/GeometryContext.hpp"
 #include "Acts/Surfaces/Surface.hpp"
 #include "Acts/Surfaces/SurfacePlacementBase.hpp"
+#include "ActsExamples/DetectorCommons/AlignmentContext.hpp"
 #include "ActsExamples/TelescopeDetectorGen3/TelescopeDetectorGen3.hpp"
 
 #include <array>
@@ -64,8 +65,23 @@ inline Acts::Surface& TelescopeDetectorGen3Element::surface() {
 
 inline const Acts::Transform3&
 TelescopeDetectorGen3Element::localToGlobalTransform(
-    const Acts::GeometryContext& /*gctx*/) const {
-  return *m_transform;
+    const Acts::GeometryContext& gctx) const {
+  if (gctx.hasValue()) {
+    const auto* alignmentContext =
+        gctx.maybeGet<ActsExamples::AlignmentContext>();
+
+    if (alignmentContext != nullptr && alignmentContext->store != nullptr) {
+      const auto* contextualTransform =
+          alignmentContext->store->contextualTransform(this->surface());
+
+      if (contextualTransform != nullptr) {
+        return *contextualTransform;
+      }
+    }
+  }
+
+  //use nominal transform if no alignment context
+   return *m_transform;
 }
 
 }  // namespace ActsExamples
